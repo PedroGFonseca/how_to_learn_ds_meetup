@@ -3,7 +3,11 @@ import numpy as np
 from itertools import product
 from matplotlib import pyplot as plt
 
+from sklearn import tree
 from sklearn.datasets import make_moons, make_circles, make_classification
+
+import graphviz
+from mlxtend.plotting import plot_decision_regions
 
 
 def _get_scikit_datasets(n_points=100):
@@ -90,15 +94,25 @@ def scatterplot(df, feature_1, feature_2, target, small=False):
     plt.show()
 
 
-def plot_boundaries(X, y, clf): 
-    features = X.columns 
-    plot_decision_regions(X=X.values, 
-                      y=y.values, 
+def plot_boundaries(X, y, clf):
+    features = X.columns
+    plot_decision_regions(X=X.values,
+                      y=y.values,
                       clf=clf,
-                      res=0.02, 
+                      res=0.02,
                       legend=2)
     # Adding axes annotations
     plt.xlabel(features[0])
     plt.ylabel(features[1])
     plt.title('Predictions of the model')
     plt.show()
+
+
+def plot_tree(tree_classifier, X_train, class_names):
+    dot_data = tree.export_graphviz(tree_classifier, out_file=None,
+                         feature_names=X_train.columns,
+                         class_names=class_names,
+                         filled=True, rounded=True,
+                         special_characters=True)
+
+    return graphviz.Source(dot_data)
